@@ -1,6 +1,6 @@
 const express=require("express")
 const cors=require("cors")
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion,ObjectId  } = require('mongodb');
 const jwt = require('jsonwebtoken');
 const port=process.env.PORT || 5000
 const app=express()
@@ -75,6 +75,24 @@ async function run() {
       const email=req?.query?.email;
       // console.log(email); 
       const result=await userCollection.findOne({email:email})
+      res.send(result)
+
+    })
+    app.get("/user",async(req,res)=>{
+      const email=req?.query?.email;
+       const result=await userCollection.findOne({email:email})
+      res.send(result)
+
+    })
+    app.patch("/user/:id",async(req,res)=>{
+      const id =req?.params?.id;
+      const info=req?.body
+      // console.log(info);
+      const query={  _id: new ObjectId(id) }
+       const updateDoc = {
+    $set: info
+  };
+      const result=await userCollection.updateOne(query,updateDoc)
       res.send(result)
 
     })
